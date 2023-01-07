@@ -27,25 +27,32 @@ function onCreateGallaryMarkup(images) {
 
 
 function onGetOriginalImage(event) {
-    event.preventDefault()
+  event.preventDefault()
 
-    if (!event.target.classList.contains("gallery__image")) {
-       return
-    }
-    const urlOfBigImage = event.target.dataset.source
+  if (!event.target.classList.contains("gallery__image")) {
+    return
+  }
+  const urlOfBigImage = event.target.dataset.source
     
-    const instance = basicLightbox.create(`
+  const instance = basicLightbox.create(`
     <img src="${urlOfBigImage}" width="800" height="600">
-`)
-    instance.show()  
+`, { onClose: (removeEscapeListener)})
+  instance.show()
 
-    window.addEventListener("keydown", (event) => {
-        if (event.code === "Escape") {
-             instance.close()
-        }
-    })
-
+  
+  function removeEscapeListener() {
+      window.removeEventListener("keydown", onCloseByEscape)
+  }
+  
+  window.addEventListener("keydown", onCloseByEscape)
+  
+  function onCloseByEscape(event) {
+    if (event.code === "Escape") {
+      instance.close()
+    }
+  }
 }
+
 
 
 
